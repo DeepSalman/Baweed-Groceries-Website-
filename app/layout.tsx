@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
@@ -6,10 +6,15 @@ import './globals.css'
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+}
+
 export const metadata: Metadata = {
   title: 'Baweed Groceries - Fresh Produce Online',
   description: 'Order fresh vegetables, fruits, and groceries online. Fast delivery to your doorstep.',
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=5',
 }
 
 export default function RootLayout({
