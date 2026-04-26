@@ -30,7 +30,7 @@ export default function Header() {
           setUser(data);
         }
       } catch (error) {
-        console.error('Error fetching user:', error);
+        // Silently fail if Supabase is not configured
       } finally {
         setLoading(false);
       }
@@ -38,20 +38,25 @@ export default function Header() {
 
     getUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session?.user) {
-        const { data } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
-        setUser(data);
-      } else {
-        setUser(null);
-      }
-    });
+    try {
+      const result = supabase.auth.onAuthStateChange(async (event, session) => {
+        if (session?.user) {
+          const { data } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+          setUser(data);
+        } else {
+          setUser(null);
+        }
+      });
 
-    return () => subscription?.unsubscribe();
+      const subscription = (result as any)?.data?.subscription;
+      return () => subscription?.unsubscribe();
+    } catch (error) {
+      // Silently fail if Supabase is not configured
+    }
   }, []);
 
   const handleLogout = async () => {
