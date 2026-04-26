@@ -17,21 +17,30 @@ export default function AdminInvoicesPage() {
   useEffect(() => {
     async function checkAdminAndFetch() {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session?.user) {
-          router.push('/login');
-          return;
-        }
+        // Check for demo admin login first
+        const userRole = localStorage.getItem('userRole');
+        const userEmail = localStorage.getItem('userEmail');
 
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', session.user.id)
-          .single();
+        if (userRole === 'admin' && userEmail === 'admin@baweed.com') {
+          // Demo admin - proceed to fetch data
+        } else {
+          // Check Supabase auth
+          const { data: { session } } = await supabase.auth.getSession();
+          if (!session?.user) {
+            router.push('/login');
+            return;
+          }
 
-        if (!profile || profile.role !== 'admin') {
-          router.push('/');
-          return;
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single();
+
+          if (!profile || profile.role !== 'admin') {
+            router.push('/');
+            return;
+          }
         }
 
         const { data } = await supabase
