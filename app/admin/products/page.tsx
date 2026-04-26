@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Header from '@/components/Header';
+import AddProductModal from '@/components/AddProductModal';
 import { type Product } from '@/lib/types';
 import { ChevronLeft, Plus } from 'lucide-react';
 
@@ -14,6 +15,7 @@ export default function AdminProductsPage() {
   const router = useRouter();
   const [products, setProducts] = useState<(Product & { supplier?: any })[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   useEffect(() => {
     async function checkAdminAndFetch() {
@@ -44,14 +46,7 @@ export default function AdminProductsPage() {
           }
         }
 
-        const { data } = await supabase
-          .from('products')
-          .select('*, supplier:suppliers(*)')
-          .order('created_at', { ascending: false });
-
-        if (data) {
-          setProducts(data);
-        }
+        await fetchProducts();
       } catch (error) {
         console.error('Error fetching products:', error);
       } finally {
@@ -61,6 +56,21 @@ export default function AdminProductsPage() {
 
     checkAdminAndFetch();
   }, [router]);
+
+  const fetchProducts = async () => {
+    try {
+      const { data } = await supabase
+        .from('products')
+        .select('*, supplier:suppliers(*)')
+        .order('created_at', { ascending: false });
+
+      if (data) {
+        setProducts(data);
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+  };
 
   if (loading) {
     return (
@@ -87,7 +97,10 @@ export default function AdminProductsPage() {
             </Link>
             <h1 className="text-3xl font-bold text-gray-900">Products Management</h1>
           </div>
-          <Button className="bg-green-600 hover:bg-green-700">
+          <Button 
+            onClick={() => setShowAddModal(true)}
+            className="bg-green-600 hover:bg-green-700"
+          >
             <Plus className="w-4 h-4 mr-2" />
             Add Product
           </Button>
@@ -145,6 +158,12 @@ export default function AdminProductsPage() {
           </CardContent>
         </Card>
       </div>
+
+      <AddProductModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onProductAdded={fetchProducts}
+      />
     </main>
   );
 }
