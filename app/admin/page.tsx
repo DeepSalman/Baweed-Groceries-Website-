@@ -23,6 +23,23 @@ export default function AdminDashboard() {
   useEffect(() => {
     async function checkAdminAccess() {
       try {
+        // Check for demo admin login first
+        const userRole = localStorage.getItem('userRole');
+        const userEmail = localStorage.getItem('userEmail');
+
+        if (userRole === 'admin' && userEmail === 'admin@baweed.com') {
+          setUser({ 
+            id: 'admin-demo',
+            email: userEmail,
+            full_name: 'Admin User',
+            role: 'admin',
+            created_at: new Date().toISOString(),
+          });
+          setLoading(false);
+          return;
+        }
+
+        // Otherwise check Supabase auth
         const { data: { session } } = await supabase.auth.getSession();
         if (!session?.user) {
           router.push('/login');

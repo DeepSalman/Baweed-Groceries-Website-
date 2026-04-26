@@ -20,6 +20,22 @@ export default function Header() {
   useEffect(() => {
     async function getUser() {
       try {
+        // Check for demo admin login first
+        const userRole = localStorage.getItem('userRole');
+        const userEmail = localStorage.getItem('userEmail');
+
+        if (userRole && userEmail) {
+          setUser({
+            id: userRole === 'admin' ? 'admin-demo' : 'user-demo',
+            email: userEmail,
+            full_name: userRole === 'admin' ? 'Admin User' : 'Customer',
+            role: userRole as any,
+            created_at: new Date().toISOString(),
+          });
+          setLoading(false);
+          return;
+        }
+
         const { data: { session } } = await supabase.auth.getSession();
         if (session?.user) {
           const { data } = await supabase
@@ -60,6 +76,11 @@ export default function Header() {
   }, []);
 
   const handleLogout = async () => {
+    // Clear demo login
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userEmail');
+    
+    // Clear Supabase session
     await supabase.auth.signOut();
     setUser(null);
   };
