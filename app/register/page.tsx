@@ -54,6 +54,12 @@ export default function RegisterPage() {
       }
 
       if (authData.user) {
+        // Store in localStorage for demo mode
+        localStorage.setItem('userRole', role);
+        localStorage.setItem('userEmail', email);
+        localStorage.setItem('userId', authData.user.id);
+        localStorage.setItem('userFullName', fullName);
+
         // Update profile with additional info
         const { error: profileError } = await supabase
           .from('profiles')
@@ -67,8 +73,8 @@ export default function RegisterPage() {
           console.error('Error updating profile:', profileError);
         }
 
-        toast.success('Registration successful! Please verify your email.');
-        router.push('/login');
+        toast.success('Registration successful! Logging you in...');
+        router.push('/');
       }
     } catch (error) {
       toast.error('An error occurred during registration');

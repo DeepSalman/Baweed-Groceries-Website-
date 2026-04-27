@@ -29,24 +29,36 @@ export default function LoginPage() {
           // Store admin session in localStorage
           localStorage.setItem('userRole', 'admin');
           localStorage.setItem('userEmail', email);
+          localStorage.setItem('userId', 'admin-demo');
           toast.success('Admin login successful!');
           router.push('/admin');
         } else {
           toast.error('Invalid admin credentials. Use admin@baweed.com / admin123 for demo.');
         }
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-
-        if (error) {
-          toast.error(error.message);
-        } else {
-          toast.success('Logged in successfully!');
+        // Customer login - check for demo credentials first
+        if (email === 'demo@customer.com' && password === 'password123') {
           localStorage.setItem('userRole', 'customer');
           localStorage.setItem('userEmail', email);
+          localStorage.setItem('userId', 'customer-demo');
+          toast.success('Demo customer login successful!');
           router.push('/');
+        } else {
+          // Try Supabase login
+          const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
+
+          if (error) {
+            toast.error(error.message);
+          } else if (data.user) {
+            toast.success('Logged in successfully!');
+            localStorage.setItem('userRole', 'customer');
+            localStorage.setItem('userEmail', email);
+            localStorage.setItem('userId', data.user.id);
+            router.push('/');
+          }
         }
       }
     } catch (error) {
@@ -102,6 +114,14 @@ export default function LoginPage() {
               <p className="font-semibold mb-1">Demo Admin Credentials:</p>
               <p>Email: <code className="bg-white px-1 py-0.5 rounded">admin@baweed.com</code></p>
               <p>Password: <code className="bg-white px-1 py-0.5 rounded">admin123</code></p>
+            </div>
+          )}
+
+          {loginType === 'customer' && (
+            <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-xs text-green-700">
+              <p className="font-semibold mb-1">Demo Customer Credentials:</p>
+              <p>Email: <code className="bg-white px-1 py-0.5 rounded">demo@customer.com</code></p>
+              <p>Password: <code className="bg-white px-1 py-0.5 rounded">password123</code></p>
             </div>
           )}
 

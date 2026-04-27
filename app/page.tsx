@@ -39,20 +39,20 @@ export default function Home() {
         if (productsRes && productsRes.data && productsRes.data.length > 0) {
           setProducts(productsRes.data);
         } else {
-          // Demo products
+          // Demo products with images and stock
           setProducts([
-            { id: 1, name: 'Tomatoes', description: 'Fresh red tomatoes', sku: 'TOM001', unit_price: 45, unit: 'kg', category_id: 1, supplier_id: 1, is_active: true, inventory: { quantity_on_hand: 100 } },
-            { id: 2, name: 'Carrots', description: 'Organic carrots', sku: 'CAR001', unit_price: 35, unit: 'kg', category_id: 1, supplier_id: 1, is_active: true, inventory: { quantity_on_hand: 80 } },
-            { id: 3, name: 'Apples', description: 'Fresh apples', sku: 'APP001', unit_price: 80, unit: 'kg', category_id: 2, supplier_id: 2, is_active: true, inventory: { quantity_on_hand: 60 } },
-            { id: 4, name: 'Bananas', description: 'Yellow bananas', sku: 'BAN001', unit_price: 40, unit: 'kg', category_id: 2, supplier_id: 2, is_active: true, inventory: { quantity_on_hand: 120 } },
-            { id: 5, name: 'Milk', description: 'Fresh milk', sku: 'MIL001', unit_price: 60, unit: 'liter', category_id: 3, supplier_id: 3, is_active: true, inventory: { quantity_on_hand: 50 } },
-            { id: 6, name: 'Cheese', description: 'Cheddar cheese', sku: 'CHE001', unit_price: 200, unit: 'kg', category_id: 3, supplier_id: 3, is_active: true, inventory: { quantity_on_hand: 30 } },
-            { id: 7, name: 'Rice', description: 'Basmati rice', sku: 'RIC001', unit_price: 90, unit: 'kg', category_id: 4, supplier_id: 4, is_active: true, inventory: { quantity_on_hand: 200 } },
-            { id: 8, name: 'Wheat Flour', description: 'All-purpose flour', sku: 'FLO001', unit_price: 50, unit: 'kg', category_id: 4, supplier_id: 4, is_active: true, inventory: { quantity_on_hand: 150 } },
+            { id: 1, name: 'Tomatoes', description: 'Fresh ripe red tomatoes, perfect for salads and cooking', sku: 'TOM001', unit_price: 2.50, unit: 'kg', category_id: 1, supplier_id: 1, is_active: true, image_url: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=400&fit=crop', inventory: { quantity_on_hand: 250 } },
+            { id: 2, name: 'Carrots', description: 'Organic fresh carrots, rich in vitamins', sku: 'CAR001', unit_price: 1.80, unit: 'kg', category_id: 1, supplier_id: 1, is_active: true, image_url: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=400&h=400&fit=crop', inventory: { quantity_on_hand: 320 } },
+            { id: 3, name: 'Apples', description: 'Crisp and sweet red apples', sku: 'APP001', unit_price: 3.20, unit: 'kg', category_id: 2, supplier_id: 2, is_active: true, image_url: 'https://images.unsplash.com/photo-1560806887-1295cbd16fbb?w=400&h=400&fit=crop', inventory: { quantity_on_hand: 280 } },
+            { id: 4, name: 'Bananas', description: 'Ripe yellow bananas, full of potassium', sku: 'BAN001', unit_price: 1.50, unit: 'kg', category_id: 2, supplier_id: 2, is_active: true, image_url: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&h=400&fit=crop', inventory: { quantity_on_hand: 400 } },
+            { id: 5, name: 'Fresh Milk', description: 'Pure fresh milk, high in calcium', sku: 'MIL001', unit_price: 1.60, unit: 'liter', category_id: 3, supplier_id: 3, is_active: true, image_url: 'https://images.unsplash.com/photo-1600788148090-efc4bb37c21a?w=400&h=400&fit=crop', inventory: { quantity_on_hand: 180 } },
+            { id: 6, name: 'Cheddar Cheese', description: 'Aged sharp cheddar cheese, perfect for cooking', sku: 'CHE001', unit_price: 8.50, unit: 'kg', category_id: 3, supplier_id: 3, is_active: true, image_url: 'https://images.unsplash.com/photo-1589985643862-6cc89ababd45?w=400&h=400&fit=crop', inventory: { quantity_on_hand: 120 } },
+            { id: 7, name: 'Basmati Rice', description: 'Premium basmati rice, aromatic and fluffy', sku: 'RIC001', unit_price: 4.50, unit: 'kg', category_id: 4, supplier_id: 4, is_active: true, image_url: 'https://images.unsplash.com/photo-1586080872410-c4260b4da897?w=400&h=400&fit=crop', inventory: { quantity_on_hand: 500 } },
+            { id: 8, name: 'Wheat Flour', description: 'All-purpose wheat flour, perfect for baking', sku: 'FLO001', unit_price: 2.20, unit: 'kg', category_id: 4, supplier_id: 4, is_active: true, image_url: 'https://images.unsplash.com/photo-1587869066536-e4db3d2e1276?w=400&h=400&fit=crop', inventory: { quantity_on_hand: 600 } },
           ]);
         }
       } catch (error) {
-        // Use demo data on error
+        // Use demo data on error with images and stock
         setCategories([
           { id: 1, name: 'Vegetables', description: 'Fresh vegetables' },
           { id: 2, name: 'Fruits', description: 'Fresh fruits' },
@@ -60,14 +60,14 @@ export default function Home() {
           { id: 4, name: 'Grains', description: 'Grains and cereals' },
         ]);
         setProducts([
-          { id: 1, name: 'Tomatoes', description: 'Fresh red tomatoes', sku: 'TOM001', unit_price: 45, unit: 'kg', category_id: 1, supplier_id: 1, is_active: true, inventory: { quantity_on_hand: 100 } },
-          { id: 2, name: 'Carrots', description: 'Organic carrots', sku: 'CAR001', unit_price: 35, unit: 'kg', category_id: 1, supplier_id: 1, is_active: true, inventory: { quantity_on_hand: 80 } },
-          { id: 3, name: 'Apples', description: 'Fresh apples', sku: 'APP001', unit_price: 80, unit: 'kg', category_id: 2, supplier_id: 2, is_active: true, inventory: { quantity_on_hand: 60 } },
-          { id: 4, name: 'Bananas', description: 'Yellow bananas', sku: 'BAN001', unit_price: 40, unit: 'kg', category_id: 2, supplier_id: 2, is_active: true, inventory: { quantity_on_hand: 120 } },
-          { id: 5, name: 'Milk', description: 'Fresh milk', sku: 'MIL001', unit_price: 60, unit: 'liter', category_id: 3, supplier_id: 3, is_active: true, inventory: { quantity_on_hand: 50 } },
-          { id: 6, name: 'Cheese', description: 'Cheddar cheese', sku: 'CHE001', unit_price: 200, unit: 'kg', category_id: 3, supplier_id: 3, is_active: true, inventory: { quantity_on_hand: 30 } },
-          { id: 7, name: 'Rice', description: 'Basmati rice', sku: 'RIC001', unit_price: 90, unit: 'kg', category_id: 4, supplier_id: 4, is_active: true, inventory: { quantity_on_hand: 200 } },
-          { id: 8, name: 'Wheat Flour', description: 'All-purpose flour', sku: 'FLO001', unit_price: 50, unit: 'kg', category_id: 4, supplier_id: 4, is_active: true, inventory: { quantity_on_hand: 150 } },
+          { id: 1, name: 'Tomatoes', description: 'Fresh ripe red tomatoes, perfect for salads and cooking', sku: 'TOM001', unit_price: 2.50, unit: 'kg', category_id: 1, supplier_id: 1, is_active: true, image_url: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=400&fit=crop', inventory: { quantity_on_hand: 250 } },
+          { id: 2, name: 'Carrots', description: 'Organic fresh carrots, rich in vitamins', sku: 'CAR001', unit_price: 1.80, unit: 'kg', category_id: 1, supplier_id: 1, is_active: true, image_url: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=400&h=400&fit=crop', inventory: { quantity_on_hand: 320 } },
+          { id: 3, name: 'Apples', description: 'Crisp and sweet red apples', sku: 'APP001', unit_price: 3.20, unit: 'kg', category_id: 2, supplier_id: 2, is_active: true, image_url: 'https://images.unsplash.com/photo-1560806887-1295cbd16fbb?w=400&h=400&fit=crop', inventory: { quantity_on_hand: 280 } },
+          { id: 4, name: 'Bananas', description: 'Ripe yellow bananas, full of potassium', sku: 'BAN001', unit_price: 1.50, unit: 'kg', category_id: 2, supplier_id: 2, is_active: true, image_url: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&h=400&fit=crop', inventory: { quantity_on_hand: 400 } },
+          { id: 5, name: 'Fresh Milk', description: 'Pure fresh milk, high in calcium', sku: 'MIL001', unit_price: 1.60, unit: 'liter', category_id: 3, supplier_id: 3, is_active: true, image_url: 'https://images.unsplash.com/photo-1600788148090-efc4bb37c21a?w=400&h=400&fit=crop', inventory: { quantity_on_hand: 180 } },
+          { id: 6, name: 'Cheddar Cheese', description: 'Aged sharp cheddar cheese, perfect for cooking', sku: 'CHE001', unit_price: 8.50, unit: 'kg', category_id: 3, supplier_id: 3, is_active: true, image_url: 'https://images.unsplash.com/photo-1589985643862-6cc89ababd45?w=400&h=400&fit=crop', inventory: { quantity_on_hand: 120 } },
+          { id: 7, name: 'Basmati Rice', description: 'Premium basmati rice, aromatic and fluffy', sku: 'RIC001', unit_price: 4.50, unit: 'kg', category_id: 4, supplier_id: 4, is_active: true, image_url: 'https://images.unsplash.com/photo-1586080872410-c4260b4da897?w=400&h=400&fit=crop', inventory: { quantity_on_hand: 500 } },
+          { id: 8, name: 'Wheat Flour', description: 'All-purpose wheat flour, perfect for baking', sku: 'FLO001', unit_price: 2.20, unit: 'kg', category_id: 4, supplier_id: 4, is_active: true, image_url: 'https://images.unsplash.com/photo-1587869066536-e4db3d2e1276?w=400&h=400&fit=crop', inventory: { quantity_on_hand: 600 } },
         ]);
       } finally {
         setLoading(false);
