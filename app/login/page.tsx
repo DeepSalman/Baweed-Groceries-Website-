@@ -30,8 +30,12 @@ export default function LoginPage() {
           localStorage.setItem('userRole', 'admin');
           localStorage.setItem('userEmail', email);
           localStorage.setItem('userId', 'admin-demo');
+          localStorage.setItem('userFullName', 'Admin User');
           toast.success('Admin login successful!');
-          router.push('/admin');
+          // Use window.location for hard redirect
+          setTimeout(() => {
+            window.location.href = '/admin';
+          }, 500);
         } else {
           toast.error('Invalid admin credentials. Use admin@baweed.com / admin123 for demo.');
         }
@@ -41,8 +45,11 @@ export default function LoginPage() {
           localStorage.setItem('userRole', 'customer');
           localStorage.setItem('userEmail', email);
           localStorage.setItem('userId', 'customer-demo');
+          localStorage.setItem('userFullName', 'Demo Customer');
           toast.success('Demo customer login successful!');
-          router.push('/');
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 500);
         } else {
           // Try Supabase login
           const { data, error } = await supabase.auth.signInWithPassword({
@@ -57,7 +64,9 @@ export default function LoginPage() {
             localStorage.setItem('userRole', 'customer');
             localStorage.setItem('userEmail', email);
             localStorage.setItem('userId', data.user.id);
-            router.push('/');
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 500);
           }
         }
       }

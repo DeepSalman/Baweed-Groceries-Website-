@@ -25,13 +25,14 @@ export default function ShopPage() {
         if (categoriesRes && categoriesRes.data && categoriesRes.data.length > 0) {
           setCategories(categoriesRes.data);
         } else {
-          // Demo categories
+          // Demo categories with images
           setCategories([
-            { id: 1, name: 'Vegetables', description: 'Fresh vegetables' },
-            { id: 2, name: 'Fruits', description: 'Fresh fruits' },
-            { id: 3, name: 'Dairy', description: 'Dairy products' },
-            { id: 4, name: 'Grains', description: 'Grains and cereals' },
+            { id: 1, name: 'Vegetables', description: 'Fresh vegetables', image_url: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&h=300&fit=crop' },
+            { id: 2, name: 'Fruits', description: 'Fresh fruits', image_url: 'https://images.unsplash.com/photo-1557804506-669714d2e9d8?w=400&h=300&fit=crop' },
+            { id: 3, name: 'Dairy', description: 'Dairy products', image_url: 'https://images.unsplash.com/photo-1597318351265-e7e4e9a67a6f?w=400&h=300&fit=crop' },
+            { id: 4, name: 'Grains', description: 'Grains and cereals', image_url: 'https://images.unsplash.com/photo-1599599810694-b5ac4dd57e4b?w=400&h=300&fit=crop' },
           ]);
+        }
         }
 
         if (productsRes && productsRes.data && productsRes.data.length > 0) {
@@ -50,12 +51,12 @@ export default function ShopPage() {
           ]);
         }
       } catch (error) {
-        // Use demo data on error
+        // Use demo data on error with images
         setCategories([
-          { id: 1, name: 'Vegetables', description: 'Fresh vegetables' },
-          { id: 2, name: 'Fruits', description: 'Fresh fruits' },
-          { id: 3, name: 'Dairy', description: 'Dairy products' },
-          { id: 4, name: 'Grains', description: 'Grains and cereals' },
+          { id: 1, name: 'Vegetables', description: 'Fresh vegetables', image_url: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&h=300&fit=crop' },
+          { id: 2, name: 'Fruits', description: 'Fresh fruits', image_url: 'https://images.unsplash.com/photo-1557804506-669714d2e9d8?w=400&h=300&fit=crop' },
+          { id: 3, name: 'Dairy', description: 'Dairy products', image_url: 'https://images.unsplash.com/photo-1597318351265-e7e4e9a67a6f?w=400&h=300&fit=crop' },
+          { id: 4, name: 'Grains', description: 'Grains and cereals', image_url: 'https://images.unsplash.com/photo-1599599810694-b5ac4dd57e4b?w=400&h=300&fit=crop' },
         ]);
         setProducts([
           { id: 1, name: 'Tomatoes', description: 'Fresh ripe red tomatoes, perfect for salads and cooking', sku: 'TOM001', unit_price: 2.50, unit: 'kg', category_id: 1, supplier_id: 1, is_active: true, image_url: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=400&fit=crop', inventory: { quantity_on_hand: 250 } },

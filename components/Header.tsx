@@ -34,6 +34,8 @@ export default function Header() {
           });
           setLoading(false);
           return;
+        } else {
+          setUser(null);
         }
 
         const { data: { session } } = await supabase.auth.getSession();
@@ -79,10 +81,17 @@ export default function Header() {
     // Clear demo login
     localStorage.removeItem('userRole');
     localStorage.removeItem('userEmail');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userFullName');
     
     // Clear Supabase session
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      // Silently fail
+    }
     setUser(null);
+    window.location.href = '/';
   };
 
   return (
