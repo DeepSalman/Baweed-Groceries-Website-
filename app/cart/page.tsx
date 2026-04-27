@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { type CartItem, type Product } from '@/lib/types';
 import Header from '@/components/Header';
 import { Trash2, Minus, Plus } from 'lucide-react';
+import { formatPrice } from '@/lib/currency';
 import { toast } from 'sonner';
 
 export default function CartPage() {
@@ -83,7 +84,11 @@ export default function CartPage() {
   const total = subtotal + tax + deliveryFee;
 
   const handleCheckout = () => {
-    if (!user) {
+    // Check if user is logged in via localStorage or Supabase
+    const userRole = localStorage.getItem('userRole');
+    const userId = localStorage.getItem('userId');
+    
+    if (!user && !userRole) {
       toast.error('Please login to proceed with checkout');
       router.push('/login');
       return;
@@ -144,7 +149,7 @@ export default function CartPage() {
                       <div className="flex-1">
                         <h3 className="font-semibold text-gray-900">{product.name}</h3>
                         <p className="text-sm text-gray-600 mb-2">
-                          AED {product.unit_price.toFixed(2)} per {product.unit}
+                          {formatPrice(product.unit_price)} per {product.unit}
                         </p>
                         <div className="flex items-center gap-2">
                           <button
@@ -174,7 +179,7 @@ export default function CartPage() {
                       <div className="text-right flex items-center gap-4">
                         <div>
                           <p className="text-sm text-gray-600">Total</p>
-                          <p className="text-lg font-semibold text-gray-900">AED {lineTotal.toFixed(2)}</p>
+                          <p className="text-lg font-semibold text-gray-900">{formatPrice(lineTotal)}</p>
                         </div>
                         <button
                           onClick={() => removeFromCart(item.product_id)}
@@ -197,19 +202,19 @@ export default function CartPage() {
                 <CardContent className="space-y-4">
                   <div className="flex justify-between text-gray-600">
                     <span>Subtotal</span>
-                    <span>AED {subtotal.toFixed(2)}</span>
+                    <span>{formatPrice(subtotal)}</span>
                   </div>
                   <div className="flex justify-between text-gray-600">
                     <span>Tax (5%)</span>
-                    <span>AED {tax.toFixed(2)}</span>
+                    <span>{formatPrice(tax)}</span>
                   </div>
                   <div className="flex justify-between text-gray-600">
                     <span>Delivery</span>
-                    <span>AED {deliveryFee.toFixed(2)}</span>
+                    <span>{formatPrice(deliveryFee)}</span>
                   </div>
                   <div className="border-t pt-4 flex justify-between font-bold text-lg">
                     <span>Total</span>
-                    <span>AED {total.toFixed(2)}</span>
+                    <span>{formatPrice(total)}</span>
                   </div>
 
                   <Button

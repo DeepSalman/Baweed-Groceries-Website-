@@ -5,6 +5,7 @@ import { type Product } from '@/lib/types';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart } from 'lucide-react';
+import { formatPrice } from '@/lib/currency';
 
 interface ProductCardProps {
   product: Product & { inventory?: any; supplier?: any };
@@ -67,7 +68,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="space-y-3">
           <div className="flex items-baseline gap-1">
             <span className="text-xl font-bold text-gray-900">
-              AED {product.unit_price.toFixed(2)}
+              {formatPrice(product.unit_price)}
             </span>
             <span className="text-sm text-gray-500">per {product.unit}</span>
           </div>

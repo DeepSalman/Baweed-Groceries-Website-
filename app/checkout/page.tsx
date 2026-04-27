@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { type CartItem, type Profile, type PaymentCard } from '@/lib/types';
 import Header from '@/components/Header';
+import { formatPrice } from '@/lib/currency';
 import { toast } from 'sonner';
 import {
   Select,
@@ -49,20 +50,40 @@ export default function CheckoutPage() {
   useEffect(() => {
     async function loadCheckoutData() {
       try {
-        // Get user info
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session?.user) {
-          router.push('/login');
-          return;
+        // Check for demo customer login first
+        const userRole = localStorage.getItem('userRole');
+        const userEmail = localStorage.getItem('userEmail');
+
+        if (userRole !== 'customer') {
+          // Get user info from Supabase
+          const { data: { session } } = await supabase.auth.getSession();
+          if (!session?.user) {
+            router.push('/login');
+            return;
+          }
+
+          const { data: profileData } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+
+          setUser(profileData);
+        } else {
+          // Demo customer
+          setUser({
+            id: 'customer-demo',
+            email: userEmail,
+            full_name: 'Demo Customer',
+            role: 'customer',
+            address: '',
+            city: '',
+            state: '',
+            postal_code: '',
+            country: 'United Kingdom',
+            created_at: new Date().toISOString(),
+          } as any);
         }
-
-        const { data: profileData } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
-
-        setUser(profileData);
 
         // Load cart and order data from localStorage
         const checkoutData = localStorage.getItem('checkoutCart');
@@ -427,7 +448,7 @@ export default function CheckoutPage() {
                   {cart.map((item) => (
                     <div key={item.product_id} className="flex justify-between">
                       <span>{item.product?.name} x {item.quantity}</span>
-                      <span>AED {((item.product?.unit_price || 0) * item.quantity).toFixed(2)}</span>
+                      <span>{formatPrice((item.product?.unit_price || 0) * item.quantity)}</span>
                     </div>
                   ))}
                 </div>
@@ -435,19 +456,19 @@ export default function CheckoutPage() {
                 <div className="border-t pt-4 space-y-2">
                   <div className="flex justify-between text-gray-600">
                     <span>Subtotal</span>
-                    <span>AED {orderData.subtotal.toFixed(2)}</span>
+                    <span>{formatPrice(orderData.subtotal)}</span>
                   </div>
                   <div className="flex justify-between text-gray-600">
                     <span>Tax (5%)</span>
-                    <span>AED {orderData.tax.toFixed(2)}</span>
+                    <span>{formatPrice(orderData.tax)}</span>
                   </div>
                   <div className="flex justify-between text-gray-600">
                     <span>Delivery</span>
-                    <span>AED {orderData.deliveryFee.toFixed(2)}</span>
+                    <span>{formatPrice(orderData.deliveryFee)}</span>
                   </div>
                   <div className="border-t pt-4 flex justify-between font-bold text-lg">
                     <span>Total</span>
-                    <span>AED {orderData.total.toFixed(2)}</span>
+                    <span>{formatPrice(orderData.total)}</span>
                   </div>
                 </div>
 
