@@ -132,17 +132,23 @@ export default function Header() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem asChild>
-                      <Link href="/profile">{user.full_name || 'Profile'}</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/orders">My Orders</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/settings">
-                        <Settings className="w-4 h-4 mr-2" />
-                        Settings
+                      <Link href={user?.role === 'admin' ? '/admin/profile' : '/profile'}>
+                        {user.full_name || 'Profile'}
                       </Link>
                     </DropdownMenuItem>
+                    {user?.role !== 'admin' && (
+                      <>
+                        <DropdownMenuItem asChild>
+                          <Link href="/orders">My Orders</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link href="/settings">
+                            <Settings className="w-4 h-4 mr-2" />
+                            Settings
+                          </Link>
+                        </DropdownMenuItem>
+                      </>
+                    )}
                     <DropdownMenuItem onClick={handleLogout}>
                       <LogOut className="w-4 h-4 mr-2" />
                       Logout

@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { type Profile } from '@/lib/types';
 import Header from '@/components/Header';
 import { toast } from 'sonner';
+import { LogOut } from 'lucide-react';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -28,6 +29,26 @@ export default function ProfilePage() {
   useEffect(() => {
     async function loadProfile() {
       try {
+        // Check for demo login first
+        const userRole = localStorage.getItem('userRole');
+        const userEmail = localStorage.getItem('userEmail');
+        const userFullNameStored = localStorage.getItem('userFullName');
+
+        if (userRole === 'customer' && userEmail) {
+          // Demo customer profile
+          setUser({
+            id: 'customer-demo',
+            email: userEmail,
+            full_name: userFullNameStored || 'Demo Customer',
+            role: 'customer',
+            created_at: new Date().toISOString(),
+          } as any);
+          setFullName(userFullNameStored || 'Demo Customer');
+          setLoading(false);
+          return;
+        }
+
+        // Check Supabase auth
         const { data: { session } } = await supabase.auth.getSession();
         if (!session?.user) {
           router.push('/login');
@@ -65,22 +86,31 @@ export default function ProfilePage() {
     setSaving(true);
 
     try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({
-          full_name: fullName,
-          phone,
-          address,
-          city,
-          state,
-          postal_code: postalCode,
-          country,
-        })
-        .eq('id', user?.id);
+      // For demo users, just show success message
+      const demoUser = localStorage.getItem('userRole') === 'customer';
+      
+      if (!demoUser) {
+        const { error } = await supabase
+          .from('profiles')
+          .update({
+            full_name: fullName,
+            phone,
+            address,
+            city,
+            state,
+            postal_code: postalCode,
+            country,
+          })
+          .eq('id', user?.id);
 
-      if (error) {
-        toast.error('Error saving profile');
+        if (error) {
+          toast.error('Error saving profile');
+        } else {
+          toast.success('Profile updated successfully!');
+        }
       } else {
+        // Demo user - update localStorage
+        localStorage.setItem('userFullName', fullName);
         toast.success('Profile updated successfully!');
       }
     } catch (error) {
@@ -89,6 +119,26 @@ export default function ProfilePage() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleLogout = async () => {
+    // Clear localStorage
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userFullName');
+
+    // Clear Supabase session
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      // Silently fail
+    }
+
+    toast.success('Logged out successfully!');
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 500);
   };
 
   if (loading) {
@@ -198,13 +248,23 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <Button
-                type="submit"
-                className="w-full bg-green-600 hover:bg-green-700"
-                disabled={saving}
-              >
-                {saving ? 'Saving...' : 'Save Changes'}
-              </Button>
+              <div className="flex gap-4">
+                <Button
+                  type="submit"
+                  className="flex-1 bg-green-600 hover:bg-green-700"
+                  disabled={saving}
+                >
+                  {saving ? 'Saving...' : 'Save Changes'}
+                </Button>
+                <Button
+                  type="button"
+                  className="flex-1 bg-red-600 hover:bg-red-700"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </Button>
+              </div>
             </form>
           </CardContent>
         </Card>
