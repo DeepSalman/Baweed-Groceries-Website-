@@ -13,6 +13,22 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ShoppingCart, User, LogOut, Settings } from 'lucide-react';
 
+function checkLocalStorageUser(): Profile | null {
+  const userRole = localStorage.getItem('userRole');
+  const userEmail = localStorage.getItem('userEmail');
+
+  if (userRole && userEmail) {
+    return {
+      id: userRole === 'admin' ? 'admin-demo' : 'customer-demo',
+      email: userEmail,
+      full_name: userRole === 'admin' ? 'Admin User' : 'Demo Customer',
+      role: userRole as any,
+      created_at: new Date().toISOString(),
+    } as Profile;
+  }
+  return null;
+}
+
 export default function Header() {
   const [user, setUser] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -20,23 +36,16 @@ export default function Header() {
   useEffect(() => {
     async function getUser() {
       try {
-        // Check for demo admin login first
-        const userRole = localStorage.getItem('userRole');
-        const userEmail = localStorage.getItem('userEmail');
-
-        if (userRole && userEmail) {
-          setUser({
-            id: userRole === 'admin' ? 'admin-demo' : 'user-demo',
-            email: userEmail,
-            full_name: userRole === 'admin' ? 'Admin User' : 'Customer',
-            role: userRole as any,
-            created_at: new Date().toISOString(),
-          });
+        // Check for demo login first
+        const demoUser = checkLocalStorageUser();
+        if (demoUser) {
+          setUser(demoUser);
           setLoading(false);
           return;
-        } else {
-          setUser(null);
         }
+        
+        // No demo user found
+        setUser(null);
 
         const { data: { session } } = await supabase.auth.getSession();
         if (session?.user) {
@@ -56,6 +65,16 @@ export default function Header() {
 
     getUser();
 
+    // Listen for focus event to recheck user (handles tab switching/page reload)
+    const handleFocus = () => {
+      const demoUser = checkLocalStorageUser();
+      if (demoUser) {
+        setUser(demoUser);
+      }
+    };
+
+    window.addEventListener('focus', handleFocus);
+
     try {
       const result = supabase.auth.onAuthStateChange(async (event, session) => {
         if (session?.user) {
@@ -71,7 +90,10 @@ export default function Header() {
       });
 
       const subscription = (result as any)?.data?.subscription;
-      return () => subscription?.unsubscribe();
+      return () => {
+        subscription?.unsubscribe();
+        window.removeEventListener('focus', handleFocus);
+      };
     } catch (error) {
       // Silently fail if Supabase is not configured
     }
