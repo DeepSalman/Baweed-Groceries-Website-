@@ -35,7 +35,6 @@ export default function Home() {
             { id: 4, name: 'Grains', description: 'Grains and cereals', image_url: 'https://images.unsplash.com/photo-1599599810694-b5ac4dd57e4b?w=400&h=300&fit=crop' },
           ]);
         }
-        }
 
         if (productsRes && productsRes.data && productsRes.data.length > 0) {
           setProducts(productsRes.data);
